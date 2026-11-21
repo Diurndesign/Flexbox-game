@@ -1,0 +1,65 @@
+# Kami et les lucioles · Flexbox-game
+
+Un jeu pour apprendre Flexbox en écrivant du vrai code, pensé pour les personnes qui veulent **commencer une formation dans le web** : aucune connaissance n’est nécessaire.
+
+La nuit tombe sur l’étang. Kami le caméléon doit guider ses amies les lucioles jusqu’aux feuilles de nénuphar de leur couleur, avec Flexbox, l’outil du CSS pour aligner des éléments. Chaque atelier terminé allume une luciole autour de Kami.
+
+## Jouer
+
+- **En ligne** : active GitHub Pages (Settings › Pages › *Deploy from a branch*, choisis la branche du jeu et le dossier `/ (root)`). Le jeu sera disponible à l’adresse `https://diurndesign.github.io/Flexbox-game/`.
+- **En local** : ouvre le dossier avec l’extension Live Server de VS Code (ou n’importe quel petit serveur web). Ouvrir `index.html` en double-cliquant peut bloquer l’aperçu dans certains navigateurs.
+
+La progression est enregistrée dans le navigateur de chaque joueur (localStorage).
+
+## Comment ça marche
+
+- **Découvrir** : une page qui explique ce qu’est Flexbox, à quoi ça sert et pourquoi on l’utilise, avec une démo à manipuler, des exemples de la vraie vie, les métiers du web qui s’en servent, le vocabulaire et les pièges du débutant.
+- **Les missions** : le plateau bouge **en direct** pendant que l’élève tape son CSS : chaque élément doit rejoindre sa cible. Le bouton **Vérifier** (ou Ctrl + Entrée) contrôle chaque objectif.
+
+| Onglet | Ce qu’on y voit |
+|---|---|
+| Le plateau | Les éléments de l’élève et leurs cibles, avec le compteur d’éléments bien placés |
+| Objectifs | Chaque critère réussi ou raté, avec une explication quand c’est faux |
+| Remarques | Le vérificateur CSS : accolade, deux-points ou point-virgule oubliés, propriété inconnue, valeur invalide (couleur en français, unité manquante…), sélecteur qui ne trouve rien… en français, avec la ligne surlignée dans l’éditeur |
+
+Étoiles : 3 sans indice, 2 avec un indice, 1 avec la solution.
+
+## Les 16 missions
+
+| Atelier | Récompense | Notions |
+|---|---|---|
+| 1. Le réveil | La luciole jaune | display: flex, justify-content |
+| 2. Se répartir | La luciole rose | justify-content: space-between, space-around, space-evenly, quiz |
+| 3. Haut et bas | La luciole bleue | align-items, centrer parfaitement |
+| 4. Changer de direction | La luciole verte | flex-direction: column, row-reverse, column-reverse |
+| 5. Plusieurs lignes | La luciole orange | flex-wrap: wrap, gap, quiz |
+| 6. Chaque luciole | La luciole violette | order, align-self, flex-grow, mission finale |
+
+En plus : un **Carnet** (antisèche des notions débloquées) et un **Bac à sable** pour tester librement. Dans le Carnet, l’option « Débloquer toutes les missions » permet au formateur d’ouvrir toutes les missions.
+
+## Fichiers
+
+```
+index.html   la structure de la page
+style.css    le design commun aux 4 jeux
+theme.css    les couleurs de ce jeu (variables CSS dans :root)
+engine.js    le moteur commun : éditeur, aperçu, vérificateur, objectifs, carte, carnet
+mascot.js    Kami, le caméléon, en SVG
+game.js      les données du jeu : page Découvrir, ateliers et missions (tableau levels)
+```
+
+Pour ajouter ou modifier une mission, édite le tableau `levels` dans `game.js`. Chaque mission contient : le texte de Kami, la leçon (quoi, pourquoi, code, morceaux, piège), les étapes, le HTML du plateau (`boardHTML`), le code de départ, les objectifs (`goals`, avec une fonction `test`), les indices et la solution (qui sert aussi à calculer les cibles du plateau).
+
+## La série
+
+| Jeu | Langage | Mascotte |
+|---|---|---|
+| [Mission Tago](https://diurndesign.github.io/Html_game/) | HTML | Tago, le bernard-l’ermite |
+| [Mission Kami](https://diurndesign.github.io/Css_game/) | CSS | Kami, le caméléon |
+| [Kami et les lucioles](https://diurndesign.github.io/Flexbox-game/) | CSS Flexbox | Kami |
+| [Le potager de Kami](https://diurndesign.github.io/Grid-game/) | CSS Grid | Kami |
+| [Mission Bip](https://diurndesign.github.io/javascript_game/) | JavaScript | Bip, le robot |
+
+---
+
+Créé par Diurn Studio.
