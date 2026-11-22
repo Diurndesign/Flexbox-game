@@ -35,7 +35,7 @@ const GAME = {
   mode: "board",
   lang: "css",
   rewardWord: "lucioles allumées",
-  rewardLabel: "Luciole",
+  rewardLabel: "À gagner",
   rewardMsg: "Une nouvelle luciole brille près de Kami :",
   chapterNote: "Chaque atelier terminé allume une luciole autour de Kami.",
   finaleTitle: "L’étang brille de mille feux !",
