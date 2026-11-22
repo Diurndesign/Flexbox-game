@@ -26,7 +26,9 @@ const NARROW = `.etang{max-width:300px;border-right:3px dashed rgba(255,255,255,
 /* Un halo clair qui montre la vraie taille de chaque boîte (missions sur les tailles) */
 const HALO = `.luciole{border-radius:32px;background-color:rgba(255,255,255,.09)}`;
 /* Les règles écrites dans la media query des écrans de 600px ou moins */
-const MQ600 = c => (c.rules || []).filter(r => r.media && /max-width\s*:\s*600px/i.test(r.media));
+const MQ600 = c => (c.rules || []).filter(r => r.media && /max-width\s*:\s*600px|width\s*<=\s*600px/i.test(r.media));
+/* Une déclaration qui passe en colonne (flex-direction ou son raccourci flex-flow, majuscules acceptées) */
+const isColDecl = d => (d.prop === "flex-direction" || d.prop === "flex-flow") && norm(d.value).split(" ").includes("column");
 /* Exemples de la leçon (mini-aperçu) */
 const EX_BASE = `.boite{background:#EEEAFF;border:2px dashed #7B5CFF;border-radius:10px;padding:6px;min-height:40px}.boite>div{background:#FFD43B;border:2px solid #1B2440;border-radius:8px;padding:6px 12px;font-weight:700;margin:0}`;
 const EX_HTML = `<div class="boite"><div>1</div><div>2</div><div>3</div></div>`;
@@ -96,7 +98,7 @@ const GAME = {
     cards: [
       { title: "C’est quoi ?", text: ["**Flexbox** (pour *flexible box*, « boîte souple ») est une partie du **CSS**, le langage qui décide de l’apparence d’une page web.", "C’est une façon de **ranger** des éléments : on prend une boîte, le **conteneur flex**, et on lui dit comment placer les boîtes qu’elle contient, ses **éléments flex** : en ligne ou en colonne, collés au début, au centre, espacés…"] },
       { title: "À quoi ça sert ?", text: "Sans Flexbox, les blocs d’une page s’empilent les uns sous les autres. Avec Flexbox, en quelques lignes, tu peux :", list: ["mettre des éléments **côte à côte** : un menu, une rangée de boutons ;", "les **espacer** régulièrement, ou les pousser à droite ;", "**centrer** un élément, en largeur et en hauteur ;", "laisser les éléments **passer à la ligne** quand l’écran est petit."] },
-      { title: "Pourquoi on l’utilise ?", text: ["Avant Flexbox, aligner trois boutons ou centrer un texte demandait des astuces compliquées et fragiles. Flexbox a été créé exactement pour ça : c’est **simple, fiable**, et ça marche dans tous les navigateurs.", "Et c’est **souple** : les éléments s’adaptent à la place disponible, sur un grand écran comme sur un téléphone. C’est pour ça que tous les sites modernes s’en servent."] }
+      { title: "Pourquoi on l’utilise ?", text: ["Avant Flexbox, aligner trois boutons ou centrer un bloc en hauteur demandait des astuces compliquées et fragiles. Flexbox a été créé exactement pour ça : c’est **simple, fiable**, et ça marche dans tous les navigateurs.", "Et c’est **souple** : les éléments s’adaptent à la place disponible, sur un grand écran comme sur un téléphone. C’est pour ça que tous les sites modernes s’en servent."] }
     ],
     trioFocus: "css",
     trioHere: "Flexbox fait partie du CSS",
@@ -166,7 +168,7 @@ const GAME = {
     ],
     traps: [
       "Écrire `display: flex` sur les éléments au lieu du conteneur. On l’écrit toujours sur la **boîte qui contient**.",
-      "Inventer des valeurs comme `justify-content: right` ou `middle`. Les vraies : `flex-start`, `flex-end`, `center`, `space-between`…",
+      "Inventer des valeurs comme `justify-content: middle` ou `align-items: bottom`. Les vraies : `flex-start`, `flex-end`, `center`, `space-between`…",
       "Mélanger les deux axes : `justify-content` suit l’axe principal, `align-items` l’axe secondaire. Et tout tourne quand on passe en colonne !",
       "Essayer de centrer en hauteur sans hauteur : si la boîte est juste assez haute pour son contenu, il n’y a pas de place pour bouger."
     ],
@@ -351,7 +353,7 @@ const GAME = {
       code: `.etang {\n  display: flex;\n  justify-content: flex-end;\n}`,
       pieces: [["flex-start", "au début de l’axe principal, à gauche (c’est la valeur par défaut)"], ["flex-end", "à la fin de l’axe principal, à droite"], ["center", "au centre de l’axe principal"]],
       example: { code: `.boite {\n  display: flex;\n  justify-content: center;\n}`, base: EX_BASE, html: EX_HTML },
-      trap: "Écrire `justify-content: right` parce que c’est plus naturel. En Flexbox, on raisonne en **début** et **fin** de l’axe : la bonne valeur est `flex-end`.",
+      trap: "Écrire `justify-content: right` parce que c’est plus naturel. Ça marche en ligne, mais plus du tout en colonne : en Flexbox, on raisonne en **début** et **fin** de l’axe, et la valeur à retenir est `flex-end`.",
       good: "Pense « début » et « fin » de l’axe plutôt que « gauche » et « droite » : ce vocabulaire reste juste quand l’axe tourne (en colonne), ou sur un site dans une langue qui s’écrit de droite à gauche, comme l’arabe."
     },
     boardHTML: pond("jaune", "rose", "bleue"),
@@ -415,7 +417,7 @@ const GAME = {
   },
   {
     id: "quiz1", ch: 2, quiz: true, title: "Le contrôle de la nuit", notion: "quiz",
-    say: "Avant d’aller plus loin, vérifions que tu as bien compris comment ranger les lucioles sur l’axe principal. Tout juste, et la luciole rose s’allume !",
+    say: "Avant d’aller plus loin, vérifions que tu as bien compris comment ranger les lucioles sur l’axe principal. Si tout est juste, la luciole rose s’allume !",
     questions: [
       { q: "Pour ranger les lucioles avec Flexbox, sur quelle boîte écrit-on `display: flex` ?", opts: ["Sur chaque luciole", "Sur l’étang, le conteneur qui les contient", "Dans le HTML, avec une balise `<flex>`"], a: 1, why: "Flexbox s’allume toujours sur le **parent**, qui devient un **conteneur flex**. Ses enfants directs, les **éléments flex**, se rangent ensuite." },
       { q: "Où vont les liens de ce menu ?", code: `.menu {\n  display: flex;\n  justify-content: flex-end;\n}`, lang: "css", opts: ["À gauche", "Au centre", "À droite, à la fin de l’axe principal"], a: 2, why: "`flex-end` envoie les éléments à la fin de l’axe principal : en ligne, c’est à droite." },
@@ -483,7 +485,7 @@ const GAME = {
       code: `.etang {\n  display: flex;\n  align-items: flex-end;\n}\n\n.rose {\n  align-self: center;\n}`,
       pieces: [["align-items", "sur le conteneur flex : la règle pour **tous** les éléments"], [".rose", "le sélecteur d’**un seul** élément flex, grâce à sa classe de couleur"], ["align-self", "sur cet élément : l’exception, rien que pour lui"], ["l’axe", "comme `align-items`, il agit sur l’axe secondaire (la hauteur, en ligne)"]],
       example: { code: `.boite {\n  display: flex;\n  height: 90px;\n  align-items: flex-start;\n}\n.deux {\n  align-self: flex-end;\n}`, base: EX_BASE, html: `<div class="boite"><div>1</div><div class="deux">2</div><div>3</div></div>` },
-      trap: "Chercher un `justify-self` pour déplacer un seul élément sur l’axe principal : en Flexbox, il n’existe pas. Pour ça, tu découvriras plus loin `order` et les marges automatiques (`margin-left: auto`).",
+      trap: "Chercher un `justify-self` pour déplacer un seul élément sur l’axe principal : en Flexbox, il n’a aucun effet. Pour ça, tu découvriras plus loin `order` et les marges automatiques (`margin-left: auto`).",
       good: "Mets la règle générale sur le conteneur et seulement les exceptions sur les éléments. Si tu te retrouves à écrire `align-self` sur tous les éléments, c’est qu’il fallait un `align-items` sur le parent."
     },
     boardHTML: pond("jaune", "rose", "bleue", "verte"),
@@ -731,7 +733,7 @@ const GAME = {
     steps: ["L’étang est déjà réglé : en ligne, centré en hauteur, avec un `gap`.", "Dans la règle `.rose`, ajoute une marge **automatique à gauche** : la rose part à droite, et la bleue et la verte la suivent."],
     starter: `.etang {\n  display: flex;\n  align-items: center;\n  gap: 16px;\n}\n\n.rose {\n  \n}\n`,
     goals: [
-      { label: "La rose a une marge automatique à gauche (`margin-left: auto`)", test: c => decl(c, ".rose", "margin-left") === "auto" || /^\S+ \S+ \S+ auto$|^\S+ auto$/.test((decl(c, ".rose", "margin") || "").trim()) || (et(c, "justify-content") !== "normal" && et(c, "justify-content") !== "flex-start" ? "`justify-content` déplace toutes les lucioles, logo compris. Retire-le, et pousse seulement le groupe de droite avec une marge automatique." : (decl(c, ".rose", "margin-left") ? "Une marge en pixels ne marchera que sur cet écran-là. Avec la valeur `auto`, elle s’adapte toute seule." : false)) },
+      { label: "La rose a une marge automatique à gauche (`margin-left: auto`)", test: c => { const ml = norm(decl(c, ".rose", "margin-left")), m = norm(decl(c, ".rose", "margin")).split(" "), left = m[m.length === 4 ? 3 : m.length === 1 ? 0 : 1], right = m[m.length === 1 ? 0 : 1]; return ml === "auto" || (!ml && left === "auto" && right !== "auto") || norm(decl(c, ".jaune", "margin-right")) === "auto" || (et(c, "justify-content") !== "normal" && et(c, "justify-content") !== "flex-start" ? "`justify-content` déplace toutes les lucioles, logo compris. Retire-le, et pousse seulement le groupe de droite avec une marge automatique." : (decl(c, ".rose", "margin-left") ? "Une marge en pixels ne marchera que sur cet écran-là. Avec la valeur `auto`, elle s’adapte toute seule." : false)); } },
       { label: "Le logo (la jaune) reste à gauche", test: c => !decl(c, ".jaune", "margin-left") || "Ne touche pas à la jaune : c’est la rose qu’on pousse." },
       { label: "Les lucioles sont sur leurs feuilles", test: boardOK }
     ],
@@ -772,7 +774,7 @@ const GAME = {
     say: "Les lucioles ont un petit étang de poche, sur téléphone ! Sur un écran étroit, elles doivent voler en colonne. Clique sur « Téléphone » au-dessus du plateau pour voir.",
     devices: true,
     lesson: {
-      what: ["Une **media query** est un bloc `@media` qui contient des règles CSS appliquées **seulement** quand une condition est vraie. Avec `(max-width: 600px)`, la condition est : « l’écran fait 600 pixels de large **ou moins** ».", "La largeur où la mise en page change s’appelle le **point de rupture** (ici `600px`). Au-dessus, seules les règles normales s’appliquent ; en dessous, celles de la media query s’ajoutent et gagnent, car elles sont écrites après."],
+      what: ["Une **media query** est un bloc `@media` qui contient des règles CSS appliquées **seulement** quand une condition est vraie. Avec `(max-width: 600px)`, la condition est : « l’écran fait 600 pixels de large **ou moins** ».", "La largeur où la mise en page change s’appelle le **point de rupture** (ici `600px`). Au-dessus de 600px, seules les règles normales s’appliquent ; à 600px ou moins, celles de la media query s’ajoutent et gagnent, car elles sont écrites après."],
       why: "C’est le cœur du **responsive** : un seul fichier CSS pour tous les écrans. Sur ordinateur, un menu en ligne ; sur téléphone, le même menu empilé en colonne. Plus de la moitié des visites d’un site se font sur téléphone.",
       code: `.etang {\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n}\n\n@media (max-width: 600px) {\n  .etang {\n    flex-direction: column;\n  }\n}`,
       pieces: [["@media", "le début d’une media query"], ["(max-width: 600px)", "la condition : écran de 600px de large ou moins"], ["{ … }", "les accolades de la media query contiennent des **règles** complètes, avec leurs propres accolades"], [".etang { flex-direction: column; }", "on ne réécrit que ce qui change : le reste vient de la règle du dessus"], ["Ordinateur / Téléphone", "les boutons au-dessus du plateau : le mode téléphone le rétrécit à 390px"]],
@@ -784,8 +786,8 @@ const GAME = {
     starter: `.etang {\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n}\n\n/* Sur les écrans de 600px de large ou moins : */\n\n`,
     goals: [
       { label: "Une media query `@media (max-width: 600px)`", test: c => MQ600(c).length > 0 || ((c.rules || []).some(r => r.media) ? "Ta media query doit viser les écrans de 600px ou moins : `@media (max-width: 600px)`." : (hasCode(c, /@media/) ? "Ta media query est vide, ou il manque une règle dedans : `.etang { … }` entre ses accolades." : false)) },
-      { label: "Dedans, `.etang` passe en `flex-direction: column`", test: c => MQ600(c).some(r => selHas(r, ".etang") && r.decls.some(d => d.prop === "flex-direction" && d.value === "column")) || (MQ600(c).some(r => r.decls.some(d => d.prop === "flex-direction")) ? "Presque : la règle de la media query doit viser `.etang` et contenir `flex-direction: column;`." : false) },
-      { label: "Sur ordinateur, l’étang reste en ligne", test: c => !(c.rules || []).some(r => !r.media && r.decls.some(d => d.prop === "flex-direction" && /column/.test(d.value))) || "Le `flex-direction: column` doit être **dans** la media query, sinon les lucioles passent en colonne sur tous les écrans." },
+      { label: "Dedans, `.etang` passe en `flex-direction: column`", test: c => MQ600(c).some(r => selHas(r, ".etang") && r.decls.some(isColDecl)) || (MQ600(c).some(r => r.decls.some(d => d.prop === "flex-direction" || d.prop === "flex-flow")) ? "Presque : la règle de la media query doit viser `.etang` et contenir `flex-direction: column;`." : false) },
+      { label: "Sur ordinateur, l’étang reste en ligne", test: c => !(c.rules || []).some(r => !r.media && r.decls.some(d => (d.prop === "flex-direction" || d.prop === "flex-flow") && /column/i.test(d.value))) || "Le `flex-direction: column` doit être **dans** la media query, sinon les lucioles passent en colonne sur tous les écrans." },
       { label: "Les lucioles sont sur leurs feuilles", test: boardOK }
     ],
     hints: ["Une media query s’écrit `@media (condition) { … }` et contient des règles complètes.", "La condition : `max-width: 600px`. Dedans, une règle `.etang { … }`.", "`@media (max-width: 600px) {` puis `.etang { flex-direction: column; }` puis `}`"],
