@@ -9,7 +9,7 @@ La nuit tombe sur l’étang. Kami le caméléon doit guider ses amies les lucio
 - **En ligne** : active GitHub Pages (Settings › Pages › *Deploy from a branch*, choisis la branche du jeu et le dossier `/ (root)`). Le jeu sera disponible à l’adresse `https://diurndesign.github.io/Flexbox-game/`.
 - **En local** : ouvre le dossier avec l’extension Live Server de VS Code (ou n’importe quel petit serveur web). Ouvrir `index.html` en double-cliquant peut bloquer l’aperçu dans certains navigateurs.
 
-La progression est enregistrée dans le navigateur, et en ligne si l’élève crée un compte (voir « La sauvegarde en ligne »).
+La progression est enregistrée dans le navigateur de chaque joueur (localStorage).
 
 ## Comment ça marche
 
@@ -22,18 +22,26 @@ La progression est enregistrée dans le navigateur, et en ligne si l’élève c
 | Objectifs | Chaque critère réussi ou raté, avec une explication quand c’est faux |
 | Remarques | Le vérificateur CSS : accolade, deux-points ou point-virgule oubliés, propriété inconnue, valeur invalide (couleur en français, unité manquante…), sélecteur qui ne trouve rien… en français, avec la ligne surlignée dans l’éditeur |
 
+Chaque leçon explique **ce que c’est**, **à quoi ça sert**, le **piège à éviter** et la **bonne pratique** professionnelle. Les missions responsive ont une bascule **Ordinateur / Téléphone**.
+
 Étoiles : 3 sans indice, 2 avec un indice, 1 avec la solution.
 
-## Les 16 missions
+## Pour aller jusqu’au bout
+
+- **Lexique** (menu en haut) : 37 mots du vocabulaire professionnel, définis simplement, avec une recherche ; 12 bonnes pratiques ; et la checklist **« Prêt pour la suite ? »** (15 points), qui renvoie vers la mission à revoir pour chaque point.
+- **Ateliers** : chaque atelier annonce ce qu’on va apprendre et se termine par un bilan « Ce que tu sais faire maintenant ».
+- **Découvrir** : la page commence par ce qu’il faut savoir avant de commencer, et renvoie au jeu précédent si besoin.
+
+## Les 21 missions
 
 | Atelier | Récompense | Notions |
 |---|---|---|
 | 1. Le réveil | La luciole jaune | display: flex, justify-content |
 | 2. Se répartir | La luciole rose | justify-content: space-between, space-around, space-evenly, quiz |
-| 3. Haut et bas | La luciole bleue | align-items, centrer parfaitement |
-| 4. Changer de direction | La luciole verte | flex-direction: column, row-reverse, column-reverse |
-| 5. Plusieurs lignes | La luciole orange | flex-wrap: wrap, gap, quiz |
-| 6. Chaque luciole | La luciole violette | order, align-self, flex-grow, mission finale |
+| 3. Haut et bas | La luciole bleue | align-items, centrer parfaitement, align-self |
+| 4. Direction et ordre | La luciole verte | flex-direction: column, row-reverse, column-reverse, order |
+| 5. Plusieurs lignes | La luciole orange | flex-wrap: wrap, align-content, gap, quiz |
+| 6. Des boîtes souples | La luciole violette | flex-grow, flex-basis, flex-shrink, flex, margin-left: auto, conteneurs flex imbriqués, media query, mission finale |
 
 En plus : un **Carnet** (antisèche des notions débloquées) et un **Bac à sable** pour tester librement. Dans le Carnet, l’option « Débloquer toutes les missions » permet au formateur d’ouvrir toutes les missions.
 
@@ -41,12 +49,12 @@ En plus : un **Carnet** (antisèche des notions débloquées) et un **Bac à sab
 
 ```
 index.html   la structure de la page
-style.css    le design commun aux 4 jeux
+jeu.css      le design commun aux 4 jeux
 theme.css    les couleurs de ce jeu (variables CSS dans :root)
-engine.js    le moteur commun : éditeur, aperçu, vérificateur, objectifs, carte, carnet
+engine.js    le moteur commun : éditeur, aperçu, vérificateur, objectifs, carte, carnet, lexique
 cloud.js     la sauvegarde en ligne (Firebase), reprise de Mission Bip
 mascot.js    Kami, le caméléon, en SVG
-game.js      les données du jeu : page Découvrir, ateliers et missions (tableau levels)
+game.js      les données du jeu : page Découvrir, lexique, ateliers et missions (tableau levels)
 ```
 
 Pour ajouter ou modifier une mission, édite le tableau `levels` dans `game.js`. Chaque mission contient : le texte de Kami, la leçon (quoi, pourquoi, code, morceaux, piège), les étapes, le HTML du plateau (`boardHTML`), le code de départ, les objectifs (`goals`, avec une fonction `test`), les indices et la solution (qui sert aussi à calculer les cibles du plateau).
